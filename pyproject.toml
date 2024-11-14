@@ -7,6 +7,42 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pydantic-settings = "^2.6.1"
+requests = "^2.32.3"
+rich = "^13.9.4"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.7.3"
+taskipy = "^1.14.0"
+pytest = "^8.3.3"
+pytest-cov = "^6.0.0"
+
+[tool.poetry.scripts]
+parabellum = "parabellum.app:run"
+
+[tool.pytest.ini_options]
+pythonpath = '.'
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+ignore = ['PLR6301']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.taskipy.tasks]
+format = 'ruff check . --fix && ruff format .'
+pre_test = 'task format'
+test = 'pytest -s -x --cov=parabellum -vv'
+post_test = 'coverage html'
+pre_docker_run = 'docker build -t parabellum:latest .'
+docker_run = 'docker run -it --rm parabellum:latest'
+post_docker_run = 'docker rmi parabellum:latest'
 
 [build-system]
 requires = ["poetry-core"]
