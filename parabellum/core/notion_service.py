@@ -1,5 +1,5 @@
 import logging
-import typing
+from typing import Any
 
 from parabellum.clients.notion import NotionClient
 from parabellum.clients.notion.filters import (
@@ -28,7 +28,7 @@ class NotionService:
 
     def list_pages(self) -> list[NotionPage]:
         try:
-            response: dict[str, typing.Any] = self.client.search_by_title(
+            response: dict[str, Any] = self.client.search_by_title(
                 query='',
                 query_filter=QueryFilter(
                     value=FilterValue.PAGE, property=FilterProperty.OBJECT

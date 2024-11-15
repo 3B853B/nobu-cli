@@ -2,7 +2,7 @@ import cmd
 import os
 import sys
 import textwrap
-import typing
+from typing import Any, Callable
 
 from rich.console import Console
 
@@ -22,8 +22,8 @@ class BaseCmd(cmd.Cmd):
         super().__init__()
 
     def _get_arg_value(
-        self, args: list[str], arg: str, convert_to: typing.Callable = str
-    ) -> typing.Any | None:
+        self, args: list[str], arg: str, convert_to: Callable = str
+    ) -> Any | None:
         return convert_to(args[args.index(arg) + 1]) if arg in args else None
 
     def default(self, line: str) -> None:

@@ -1,5 +1,5 @@
 import logging
-import typing
+from typing import Any
 
 import requests
 
@@ -29,14 +29,14 @@ class NotionClient:
         query_filter: QueryFilter | None = None,
         start_cursor: str | None = None,
         page_size: int | None = None,
-    ) -> dict[str, typing.Any]:
+    ) -> dict[str, Any]:
         try:
             resource_url: str = f'{self.base_url}/search'
 
             headers: dict[str, str] = self.base_headers
             headers['Content-Type']: str = 'application/json'
 
-            body_params: dict[str, typing.Any] = {
+            body: dict[str, Any] = {
                 'query': query,
                 'sort': query_sort.model_dump() if query_sort else None,
                 'filter': query_filter.model_dump() if query_filter else None,
@@ -44,31 +44,29 @@ class NotionClient:
                 'page_size': page_size,
             }
 
-            body_params: dict[str, typing.Any] = {
-                key: value
-                for key, value in body_params.items()
-                if value is not None
+            body: dict[str, Any] = {
+                key: value for key, value in body.items() if value is not None
             }
 
-            results: list[dict[str, typing.Any]] = []
+            results: list[dict[str, Any]] = []
             while True:
                 response: requests.Response = requests.post(
                     url=resource_url,
                     headers=headers,
-                    json=body_params,
+                    json=body,
                     timeout=self.timeout,
                 )
 
                 response.raise_for_status()
 
-                dict_response = response.json()
+                dict_response: dict[str, Any] = response.json()
                 results.extend(dict_response['results'])
 
-                has_more = dict_response['has_more']
+                has_more: bool = dict_response['has_more']
                 if has_more:
-                    body_params['start_cursor'] = dict_response['next_cursor']
+                    body['start_cursor']: str = dict_response['next_cursor']
                 else:
-                    dict_response['results'] = results
+                    dict_response['results']: list[dict[str, Any]] = results
                     return dict_response
 
         except Exception as ex:

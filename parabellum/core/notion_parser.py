@@ -1,5 +1,5 @@
 import logging
-import typing
+from typing import Any
 
 from .notion_page import NotionPage
 
@@ -8,7 +8,7 @@ class NotionParser:
     _logger = logging.getLogger(__name__)
 
     @classmethod
-    def to_notion_page(cls, data: dict[str, typing.Any]) -> NotionPage:
+    def to_notion_page(cls, data: dict[str, Any]) -> NotionPage:
         try:
             identifier: str = data['id']
             title: str = data['properties']['title']['title'][0]['plain_text']
