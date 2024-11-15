@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parabellum"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["Guilherme Marim <3b853b@pm.me>"]
 readme = "README.md"
