@@ -4,7 +4,7 @@ from rich.console import Console
 from rich.table import Table
 
 from parabellum.commons import Printer
-from parabellum.core import NotionPage, NotionService
+from parabellum.core import NotionDatabase, NotionPage, NotionService
 
 from .base_cmd import BaseCmd
 
@@ -22,6 +22,15 @@ class ParabellumCmd(BaseCmd):
         self.prompt: str = 'parabellum > '
         super().__init__()
 
+    def _print_dbs(self, dbs: list[NotionDatabase]) -> None:
+        table: Table = Table()
+        table.add_column('ID', header_style='b', justify='left')
+        table.add_column('Title', header_style='b', justify='full')
+
+        [table.add_row(db.identifier, db.title) for db in dbs]
+
+        self.console.print(table)
+
     def _print_pages(self, pages: list[NotionPage]) -> None:
         table: Table = Table()
         table.add_column('ID', header_style='b', justify='left')
@@ -31,6 +40,15 @@ class ParabellumCmd(BaseCmd):
 
         self.console.print(table)
 
+    def do_notion_dbs(self, line: str | None = None) -> None:
+        try:
+            service: NotionService = NotionService()
+            dbs: list[NotionDatabase] = service.list_dbs()
+            self._print_dbs(dbs)
+
+        except Exception as ex:
+            Printer.err(str(ex))
+
     def do_notion_pages(self, line: str | None = None) -> None:
         try:
             service: NotionService = NotionService()
@@ -39,6 +57,17 @@ class ParabellumCmd(BaseCmd):
 
         except Exception as ex:
             Printer.err(str(ex))
+
+    def help_notion_dbs(self) -> None:
+        """
+        Prints help menu for the notion_dbs command.
+        """
+        help_text: str = """
+        [bold cyan]Usage:[/bold cyan] notion_dbs
+
+        List all notion databases that is integrated with Parabellum.
+        """
+        self.console.print(textwrap.dedent(help_text), highlight=False)
 
     def help_notion_pages(self) -> None:
         """

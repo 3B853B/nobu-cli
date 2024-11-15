@@ -7,7 +7,7 @@ from parabellum.clients.notion.filters import (
     FilterValue,
     QueryFilter,
 )
-from parabellum.core import NotionPage
+from parabellum.core import NotionDatabase, NotionPage
 from parabellum.settings import Settings
 
 from .notion_parser import NotionParser
@@ -25,6 +25,25 @@ class NotionService:
             raise ValueError('could not find Notion token')
 
         self.client: NotionClient = NotionClient(token=self.token)
+
+    def list_dbs(self) -> list[NotionDatabase]:
+        try:
+            response: dict[str, Any] = self.client.search_by_title(
+                query='',
+                query_filter=QueryFilter(
+                    value=FilterValue.DATABASE, property=FilterProperty.OBJECT
+                ),
+            )
+
+            dbs: list[NotionDatabase] = []
+            for result in response['results']:
+                dbs.append(NotionParser.to_notion_database(result))
+
+            return dbs
+
+        except Exception as ex:
+            self.logger.exception(str(ex), exc_info=True)
+            raise
 
     def list_pages(self) -> list[NotionPage]:
         try:
