@@ -50,16 +50,26 @@ class NotionClient:
                 if value is not None
             }
 
-            response: requests.Response = requests.post(
-                url=resource_url,
-                headers=headers,
-                json=body_params,
-                timeout=self.timeout,
-            )
+            results: list[dict[str, typing.Any]] = []
+            while True:
+                response: requests.Response = requests.post(
+                    url=resource_url,
+                    headers=headers,
+                    json=body_params,
+                    timeout=self.timeout,
+                )
 
-            response.raise_for_status()
+                response.raise_for_status()
 
-            return response.json()
+                dict_response = response.json()
+                results.extend(dict_response['results'])
+
+                has_more = dict_response['has_more']
+                if has_more:
+                    body_params['start_cursor'] = dict_response['next_cursor']
+                else:
+                    dict_response['results'] = results
+                    return dict_response
 
         except Exception as ex:
             self.logger.exception(str(ex), exc_info=True)
