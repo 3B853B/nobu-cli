@@ -25,7 +25,7 @@ class ParabellumCmd(BaseCmd):
     def _print_pages(self, pages: list[NotionPage]) -> None:
         table: Table = Table()
         table.add_column('ID', header_style='b', justify='left')
-        table.add_column('Title', header_style='b', justify='center')
+        table.add_column('Title', header_style='b', justify='full')
 
         [table.add_row(page.identifier, page.title) for page in pages]
 
