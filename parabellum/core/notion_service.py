@@ -1,4 +1,6 @@
+import json
 import logging
+from pathlib import Path
 from typing import Any
 
 from parabellum.clients.notion import NotionClient
@@ -20,11 +22,41 @@ class NotionService:
         )
         self.settings: Settings = Settings()
         self.token: str = self.settings.notion_token
+        self.root_page_id: str = self.settings.notion_root_page_id
 
         if not self.token:
             raise ValueError('could not find Notion token')
+        if not self.root_page_id:
+            raise ValueError('could not find Notion root page ID')
 
         self.client: NotionClient = NotionClient(token=self.token)
+
+    def create_db(self, template: Path) -> None:
+        try:
+            if not template.exists():
+                raise ValueError('file not found')
+
+            with open(template, 'r', encoding='utf-8') as file:
+                dict_template: dict[str, Any] = json.load(file)
+
+            parent = dict_template['parent']
+            parent['page_id'] = self.root_page_id
+
+            self.client.create_database(
+                parent=parent,
+                properties=dict_template['properties'],
+                icon=dict_template.get('icon'),
+                cover=dict_template.get('cover'),
+                title=dict_template.get('title'),
+            )
+
+        except ValueError:
+            self.logger.exception('invalid template format')
+            raise
+
+        except Exception as ex:
+            self.logger.exception(str(ex), exc_info=True)
+            raise
 
     def list_dbs(self) -> list[NotionDatabase]:
         try:

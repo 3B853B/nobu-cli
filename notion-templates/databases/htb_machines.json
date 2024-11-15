@@ -1,0 +1,136 @@
+{
+  "parent": {
+    "type": "page_id",
+    "page_id": "ROOT_PAGE_ID"
+  },
+  "icon": {
+    "type": "external",
+    "external": {
+      "url": "https://app.hackthebox.com/files/homepage/machines.svg"
+    }
+  },
+  "cover": {
+    "type": "external",
+    "external": {
+      "url": "https://www.notion.so/images/page-cover/gradients_3.png"
+    }
+  },
+  "title": [
+    {
+      "type": "text",
+      "text": {
+        "content": "Machines",
+        "link": null
+      }
+    }
+  ],
+  "properties": {
+    "Status": {
+      "select": {
+        "options": [
+          {
+            "name": "Not Started",
+            "color": "gray"
+          },
+          {
+            "name": "Started",
+            "color": "blue"
+          },
+          {
+            "name": "Review",
+            "color": "yellow"
+          },
+          {
+            "name": "Done",
+            "color": "green"
+          }
+        ]
+      }
+    },
+    "Name": {
+      "title": {}
+    },
+    "Difficulty": {
+      "select": {
+        "options": [
+          {
+            "name": "Insane",
+            "color": "gray"
+          },
+          {
+            "name": "Hard",
+            "color": "red"
+          },
+          {
+            "name": "Medium",
+            "color": "yellow"
+          },
+          {
+            "name": "Easy",
+            "color": "green"
+          },
+          {
+            "name": "Very Easy",
+            "color": "purple"
+          }
+        ]
+      }
+    },
+    "OS": {
+      "select": {
+        "options": [
+          {
+            "name": "Linux",
+            "color": "gray"
+          },
+          {
+            "name": "Windows",
+            "color": "gray"
+          }
+        ]
+      }
+    },
+    "URL": {
+      "url": {}
+    },
+    "Release Date": {
+      "date": {}
+    },
+    "Pwn Ranking": {
+      "number": {}
+    },
+    "Pwn Achievement": {
+      "url": {}
+    },
+    "Tags": {
+      "multi_select": {
+        "options": [
+          {
+            "name": "Season 1",
+            "color": "gray"
+          },
+          {
+            "name": "Season 2",
+            "color": "gray"
+          },
+          {
+            "name": "Season 3",
+            "color": "gray"
+          },
+          {
+            "name": "Season 4",
+            "color": "gray"
+          },
+          {
+            "name": "Season 5",
+            "color": "gray"
+          },
+          {
+            "name": "Season 6",
+            "color": "gray"
+          }
+        ]
+      }
+    }
+  }
+}

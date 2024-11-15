@@ -6,4 +6,5 @@ class Settings(BaseSettings):
         env_file='.env', env_file_encoding='utf-8', extra='ignore'
     )
 
+    notion_root_page_id: str | None = None
     notion_token: str | None = None

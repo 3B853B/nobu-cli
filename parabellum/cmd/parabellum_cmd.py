@@ -1,4 +1,5 @@
 import textwrap
+from pathlib import Path
 
 from rich.console import Console
 from rich.table import Table
@@ -40,6 +41,21 @@ class ParabellumCmd(BaseCmd):
 
         self.console.print(table)
 
+    def do_create_db(self, line: str | None = None) -> bool:
+        try:
+            args = line.split(' ')
+            if not args[0]:
+                Printer.err('missing template file')
+                return False
+
+            template = Path(args[0])
+            service: NotionService = NotionService()
+            service.create_db(template)
+            Printer.suc('database created successfully.')
+
+        except Exception as ex:
+            Printer.err(str(ex))
+
     def do_notion_dbs(self, line: str | None = None) -> None:
         try:
             service: NotionService = NotionService()
@@ -57,6 +73,17 @@ class ParabellumCmd(BaseCmd):
 
         except Exception as ex:
             Printer.err(str(ex))
+
+    def help_create_db(self) -> None:
+        """
+        Prints help menu for the create_db command.
+        """
+        help_text: str = """
+        [bold cyan]Usage:[/bold cyan] create_db notion-templates/template.json
+
+        Create a new Notion database based on a template file.
+        """
+        self.console.print(textwrap.dedent(help_text), highlight=False)
 
     def help_notion_dbs(self) -> None:
         """

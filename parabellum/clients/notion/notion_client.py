@@ -3,6 +3,8 @@ from typing import Any
 
 import requests
 
+from parabellum.commons import BearerAuth
+
 from .filters.query_filter import QueryFilter
 from .sorts.query_sort import QuerySort
 
@@ -18,9 +20,50 @@ class NotionClient:
         self.base_url: str = 'https://api.notion.com/v1'
         self.base_headers: dict[str, str] = {
             'Notion-Version': version,
-            'Authorization': f'Bearer {token}',
         }
         self.timeout: int = timeout
+
+    def create_database(
+        self,
+        parent: dict[str, Any],
+        properties: dict[str, Any],
+        icon: dict[str, Any] | None = None,
+        cover: dict[str, Any] | None = None,
+        title: list[dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        try:
+            resource_url: str = f'{self.base_url}/databases'
+
+            headers: dict[str, str] = self.base_headers
+            headers['Content-Type']: str = 'application/json'
+
+            body: dict[str, Any] = {
+                'parent': parent,
+                'properties': properties,
+                'icon': icon,
+                'cover': cover,
+                'title': title,
+            }
+
+            body: dict[str, Any] = {
+                key: value for key, value in body.items() if value is not None
+            }
+
+            response: requests.Response = requests.post(
+                url=resource_url,
+                headers=headers,
+                json=body,
+                timeout=self.timeout,
+                auth=BearerAuth(self.token),
+            )
+
+            response.raise_for_status()
+
+            return response.json()
+
+        except Exception as ex:
+            self.logger.exception(str(ex), exc_info=True)
+            raise
 
     def search_by_title(
         self,
@@ -55,6 +98,7 @@ class NotionClient:
                     headers=headers,
                     json=body,
                     timeout=self.timeout,
+                    auth=BearerAuth(self.token),
                 )
 
                 response.raise_for_status()

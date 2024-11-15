@@ -9,7 +9,7 @@ def run() -> None:
     Starts the main application console.
     """
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.CRITICAL,
         format='[%(asctime)s] [%(name)s] [%(levelname)s]: %(message)s',
     )
 
