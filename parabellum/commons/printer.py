@@ -1,4 +1,5 @@
 import sys
+import typing
 
 from rich.console import Console
 from rich.markup import escape
@@ -10,7 +11,7 @@ class Printer:
     console_stderr = Console(file=sys.stderr)
 
     @staticmethod
-    def err(message: str) -> None:
+    def err(message: typing.Any) -> None:
         """
         Prints an error message to stderr with a red prefix.
 
@@ -20,7 +21,7 @@ class Printer:
         Printer.console_stderr.print(err_prefix, message, highlight=False)
 
     @staticmethod
-    def suc(message: str) -> None:
+    def suc(message: typing.Any) -> None:
         """
         Prints a success message to stdout with a green prefix.
 
@@ -30,7 +31,7 @@ class Printer:
         Printer.console_stdout.print(suc_prefix, message, highlight=False)
 
     @staticmethod
-    def war(message: str) -> None:
+    def war(message: typing.Any) -> None:
         """
         Prints a warning message to stdout with a yellow prefix.
 
@@ -40,7 +41,7 @@ class Printer:
         Printer.console_stdout.print(war_prefix, message, highlight=False)
 
     @staticmethod
-    def inf(message: str) -> None:
+    def inf(message: typing.Any) -> None:
         """
         Prints an info message to stdout with a blue prefix.
 

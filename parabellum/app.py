@@ -1,3 +1,6 @@
+import logging
+import logging.config
+
 from parabellum.cmd import ParabellumCmd
 
 
@@ -5,7 +8,12 @@ def run() -> None:
     """
     Starts the main application console.
     """
-    parabellum_cmd = ParabellumCmd()
+    logging.basicConfig(
+        level=logging.INFO,
+        format='[%(asctime)s] [%(name)s] [%(levelname)s]: %(message)s',
+    )
+
+    parabellum_cmd: ParabellumCmd = ParabellumCmd()
     try:
         parabellum_cmd.cmdloop()
     except KeyboardInterrupt:

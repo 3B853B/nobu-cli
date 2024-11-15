@@ -6,4 +6,4 @@ class Settings(BaseSettings):
         env_file='.env', env_file_encoding='utf-8', extra='ignore'
     )
 
-    pass
+    notion_token: str | None = None
