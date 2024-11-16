@@ -9,7 +9,7 @@ from parabellum.clients.notion.filters import (
     FilterValue,
     QueryFilter,
 )
-from parabellum.core import NotionDatabase, NotionPage
+from parabellum.core.notion import NotionDatabase, NotionPage
 from parabellum.settings import Settings
 
 from .notion_parser import NotionParser

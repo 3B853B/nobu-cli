@@ -12,7 +12,7 @@ class BearerAuth(auth.AuthBase):
 
         :param token: Bearer token to be added to Authorization header.
         """
-        self._token = token
+        self._token: str = token
 
     def __call__(self, request: Request) -> Request:
         """
@@ -22,5 +22,5 @@ class BearerAuth(auth.AuthBase):
 
         :return: Request object with Authorization bearer added.
         """
-        request.headers['Authorization'] = f'Bearer {self._token}'
+        request.headers['Authorization']: str = f'Bearer {self._token}'
         return request

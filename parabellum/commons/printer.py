@@ -7,8 +7,8 @@ from rich.text import Text
 
 
 class Printer:
-    console_stdout = Console()
-    console_stderr = Console(file=sys.stderr)
+    console_stdout: Console = Console()
+    console_stderr: Console = Console(file=sys.stderr)
 
     @staticmethod
     def err(message: Any) -> None:
@@ -17,7 +17,7 @@ class Printer:
 
         :param message: The message to print.
         """
-        err_prefix = Text('err:', style='bold red')
+        err_prefix: Text = Text('err:', style='bold red')
         Printer.console_stderr.print(err_prefix, message, highlight=False)
 
     @staticmethod
@@ -27,7 +27,7 @@ class Printer:
 
         :param message: The message to print.
         """
-        suc_prefix = Text('suc:', style='bold green')
+        suc_prefix: Text = Text('suc:', style='bold green')
         Printer.console_stdout.print(suc_prefix, message, highlight=False)
 
     @staticmethod
@@ -37,7 +37,7 @@ class Printer:
 
         :param message: The message to print.
         """
-        war_prefix = Text('war:', style='bold yellow')
+        war_prefix: Text = Text('war:', style='bold yellow')
         Printer.console_stdout.print(war_prefix, message, highlight=False)
 
     @staticmethod
@@ -47,7 +47,7 @@ class Printer:
 
         :param message: The message to print.
         """
-        inf_prefix = Text('inf:', style='bold cyan')
+        inf_prefix: Text = Text('inf:', style='bold cyan')
         Printer.console_stdout.print(inf_prefix, message, highlight=False)
 
     @staticmethod

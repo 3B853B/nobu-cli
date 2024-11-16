@@ -6,7 +6,7 @@ from .htb_user import HtbUser
 
 
 class HtbParser:
-    _logger = logging.getLogger(__name__)
+    _logger: logging.Logger = logging.getLogger(__name__)
 
     @classmethod
     def to_machine_list(cls, machines: dict[str, Any]) -> list[HtbMachine]:
@@ -20,7 +20,7 @@ class HtbParser:
     @classmethod
     def to_machine(cls, machine_dict: dict[str, Any]) -> HtbMachine:
         try:
-            makers = []
+            makers: list[HtbUser] = []
             for user in [
                 machine_dict.get('maker'),
                 machine_dict.get('maker2'),

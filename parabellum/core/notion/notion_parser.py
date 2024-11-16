@@ -6,7 +6,7 @@ from .notion_page import NotionPage
 
 
 class NotionParser:
-    _logger = logging.getLogger(__name__)
+    _logger: logging.Logger = logging.getLogger(__name__)
 
     @classmethod
     def to_notion_database(cls, data: dict[str, Any]) -> NotionDatabase:

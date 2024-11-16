@@ -2,7 +2,7 @@ import logging
 from datetime import timedelta
 from typing import Any
 
-from requests_cache import CachedSession
+from requests_cache import CachedResponse, CachedSession, OriginalResponse
 
 from parabellum.commons import BearerAuth
 
@@ -19,18 +19,18 @@ class HtbClient:
         self.logger: logging.Logger = logging.getLogger(
             self.__class__.__name__
         )
-        self.token = token
-        self.base_url = 'https://labs.hackthebox.com/api/v4'
-        self.base_headers = {
+        self.token: str = token
+        self.base_url: str = 'https://labs.hackthebox.com/api/v4'
+        self.base_headers: dict[str, str] = {
             'User-Agent': 'Parabellum',
             'Accept': 'application/json',
         }
-        self.session = CachedSession(
+        self.session: CachedSession = CachedSession(
             cache_name='.cache',
             backend='filesystem',
             expire_after=timedelta(minutes=5),
         )
-        self.timeout = timeout
+        self.timeout: int = timeout
 
     def list_machines(
         self, size: int = 100, retired: bool = False, update: bool = False
@@ -73,7 +73,7 @@ class HtbClient:
             while len(machines) < size:
                 params: dict[str, int] = {'per_page': per_page}
 
-                response = self.session.get(
+                response: OriginalResponse | CachedResponse = self.session.get(
                     url=url,
                     headers=self.base_headers,
                     params=params,
@@ -83,7 +83,7 @@ class HtbClient:
 
                 response.raise_for_status()
 
-                results = response.json()
+                results: dict[str, Any] = response.json()
                 machines.extend(results['data'])
 
                 links: dict[str, str] = results['links']
@@ -92,7 +92,7 @@ class HtbClient:
 
                 url: str = links['next']
 
-            results['data'] = machines[:size]
+            results['data']: list[str, Any] = machines[:size]
             return results
 
         except Exception as ex:

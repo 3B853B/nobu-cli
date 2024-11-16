@@ -18,7 +18,7 @@ class BaseCmd(cmd.Cmd):
         """
         Initializes BaseCmd object.
         """
-        self.console = Console()
+        self.console: Console = Console()
         super().__init__()
 
     def _get_arg_value(
@@ -53,7 +53,7 @@ class BaseCmd(cmd.Cmd):
         """
         Prints help menu for the clear command.
         """
-        help_text = """
+        help_text: str = """
         [bold cyan]Usage:[/bold cyan] clear
 
         Clears the application console.
@@ -64,7 +64,7 @@ class BaseCmd(cmd.Cmd):
         """
         Prints help menu for the exit command.
         """
-        help_text = """
+        help_text: str = """
         [bold cyan]Usage:[/bold cyan] exit
 
         Exits the application.
@@ -75,7 +75,7 @@ class BaseCmd(cmd.Cmd):
         """
         Prints help menu for the quit command.
         """
-        help_text = """
+        help_text: str = """
         [bold cyan]Usage:[/bold cyan] quit
 
         Exits the application.

@@ -5,12 +5,12 @@ from rich.console import Console
 from rich.table import Table
 
 from parabellum.commons import Printer
-from parabellum.core import (
+from parabellum.core.htb import HtbMachine, HtbService
+from parabellum.core.notion import (
     NotionDatabase,
     NotionPage,
     NotionService,
 )
-from parabellum.core.htb import HtbMachine, HtbService
 
 from .base_cmd import BaseCmd
 
@@ -81,12 +81,12 @@ class ParabellumCmd(BaseCmd):
 
     def do_create_db(self, line: str | None = None) -> bool:
         try:
-            args = line.split(' ')
+            args: list[str] = line.split(' ')
             if not args[0]:
                 Printer.err('missing template file')
                 return False
 
-            template = Path(args[0])
+            template: Path = Path(args[0])
             service: NotionService = NotionService()
             service.create_db(template)
             Printer.suc('database created successfully.')
@@ -143,8 +143,7 @@ class ParabellumCmd(BaseCmd):
         """
         Prints help menu for the machines command.
         """
-
-        help_text = """
+        help_text: str = """
         [bold cyan]Usage:[/bold cyan] machines [OPTIONS]
 
         List active and retired machines. By default it lists
