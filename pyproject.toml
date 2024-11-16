@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parabellum"
-version = "0.4.0"
+version = "0.5.0"
 description = ""
 authors = ["Guilherme Marim <3b853b@pm.me>"]
 readme = "README.md"
@@ -10,6 +10,7 @@ python = "^3.11"
 pydantic-settings = "^2.6.1"
 requests = "^2.32.3"
 rich = "^13.9.4"
+requests-cache = "^1.2.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.7.3"
