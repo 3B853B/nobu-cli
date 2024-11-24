@@ -20,7 +20,6 @@ class ParabellumCmd(BaseCmd):
         """
         self.console: Console = Console()
         self.prompt: str = 'parabellum > '
-        self.notion_cmd: NotionCmd = NotionCmd(self.prompt)
         super().__init__()
 
     def do_htb(self, line: str | None = None) -> None:
@@ -32,7 +31,8 @@ class ParabellumCmd(BaseCmd):
 
     def do_notion(self, line: str | None = None) -> None:
         try:
-            self.notion_cmd.cmdloop()
+            notion_cmd: NotionCmd = NotionCmd(self.prompt)
+            notion_cmd.cmdloop()
         except Exception as ex:
             Printer.err(str(ex))
 
