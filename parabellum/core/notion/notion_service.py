@@ -22,17 +22,18 @@ class NotionService:
         )
         self.settings: Settings = Settings()
         self.token: str = self.settings.notion_token
-        self.root_page_id: str = self.settings.notion_root_page_id
+        self.root_page_id: str | None = self.settings.notion_root_page_id
 
         if not self.token:
             raise ValueError('could not find Notion token')
-        if not self.root_page_id:
-            raise ValueError('could not find Notion root page ID')
 
         self.client: NotionClient = NotionClient(token=self.token)
 
-    def create_db(self, template: Path) -> None:
+    def create_db(self, template: Path, parent_id: str | None = None) -> None:
         try:
+            if not self.root_page_id and not parent_id:
+                raise ValueError('could not find any parent ID')
+
             if not template.exists():
                 raise ValueError('file not found')
 
@@ -40,7 +41,9 @@ class NotionService:
                 dict_template: dict[str, Any] = json.load(file)
 
             parent = dict_template['parent']
-            parent['page_id'] = self.root_page_id
+            parent['page_id'] = (
+                self.root_page_id if not parent_id else parent_id
+            )
 
             self.client.create_database(
                 parent=parent,
