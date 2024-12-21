@@ -3,7 +3,7 @@ from typing import Any
 
 import requests
 
-from parabellum.commons import BearerAuth
+from nobu.commons import BearerAuth
 
 from .filters.query_filter import QueryFilter
 from .sorts.query_sort import QuerySort

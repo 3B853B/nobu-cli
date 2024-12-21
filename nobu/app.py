@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from parabellum.cmd import ParabellumCmd
+from nobu.cmd import NobuCmd
 
 
 def run() -> None:
@@ -13,8 +13,8 @@ def run() -> None:
         format='[%(asctime)s] [%(name)s] [%(levelname)s]: %(message)s',
     )
 
-    parabellum_cmd: ParabellumCmd = ParabellumCmd()
+    nobu_cmd: NobuCmd = NobuCmd()
     try:
-        parabellum_cmd.cmdloop()
+        nobu_cmd.cmdloop()
     except KeyboardInterrupt:
-        parabellum_cmd.do_exit()
+        nobu_cmd.do_exit()

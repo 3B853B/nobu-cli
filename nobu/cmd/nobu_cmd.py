@@ -4,25 +4,25 @@ from pathlib import Path
 from rich.console import Console
 from rich.table import Table
 
-from parabellum.commons import Printer
-from parabellum.core.notion import NotionDatabase, NotionPage, NotionService
+from nobu.commons import Printer
+from nobu.core.notion import NotionDatabase, NotionPage, NotionService
 
 from .base_cmd import BaseCmd
 
 
-class ParabellumCmd(BaseCmd):
+class NobuCmd(BaseCmd):
     """
-    Handle all Parabellum commands.
+    Handle all Nobu commands.
     """
 
     console: Console = Console()
     notion: NotionService = NotionService()
     notion_context: NotionDatabase | NotionPage | None = None
-    prompt_template: str = 'parabellum{module} {notion_context} > '
+    prompt_template: str = 'nobu{module} {notion_context} > '
 
     def __init__(self, module_name: str | None = None) -> None:
         """
-        Initializes ParabellumCmd object.
+        Initializes NobuCmd object.
 
         :param module_name: A string representing the module's
          name to be used in the prompt. If None, no module name is set.
@@ -38,11 +38,11 @@ class ParabellumCmd(BaseCmd):
         self.prompt: str = re.sub(
             ' +',
             ' ',
-            ParabellumCmd.prompt_template.format(
+            NobuCmd.prompt_template.format(
                 module=f'({self.module_name})' if self.module_name else '',
                 notion_context=(
-                    f'({ParabellumCmd.notion_context.title})'
-                    if ParabellumCmd.notion_context
+                    f'({NobuCmd.notion_context.title})'
+                    if NobuCmd.notion_context
                     else ''
                 ),
             ),
@@ -114,14 +114,14 @@ class ParabellumCmd(BaseCmd):
 
             for page in pages:
                 if identifier == page.identifier:
-                    ParabellumCmd.notion_context = page
+                    NobuCmd.notion_context = page
                     Printer.suc(f'using page "{page.title}"')
                     self._update_prompt()
                     return False
 
             for database in databases:
                 if identifier == database.identifier:
-                    ParabellumCmd.notion_context = database
+                    NobuCmd.notion_context = database
                     Printer.suc(f'using database "{database.title}"')
                     self._update_prompt()
                     return False
@@ -158,7 +158,7 @@ class ParabellumCmd(BaseCmd):
         help_text: str = """
         [bold cyan]Usage:[/bold cyan] dbs
 
-        Lists all notion databases that is integrated with Parabellum.
+        Lists all notion databases that is integrated with Nobu.
         """
         Printer.help(help_text)
 
@@ -180,7 +180,7 @@ class ParabellumCmd(BaseCmd):
         help_text: str = """
         [bold cyan]Usage:[/bold cyan] pages
 
-        Lists all notion pages that is integrated with Parabellum.
+        Lists all notion pages that is integrated with Nobu.
         """
         Printer.help(help_text)
 

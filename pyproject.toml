@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "parabellum"
-version = "0.8.0"
+name = "nobu-cli"
+version = "1.0.0"
 description = ""
 authors = ["Guilherme Marim <3b853b@pm.me>"]
 readme = "README.md"
@@ -20,7 +20,7 @@ pytest-cov = "^6.0.0"
 bandit = "^1.7.10"
 
 [tool.poetry.scripts]
-parabellum = "parabellum.app:run"
+nobu = "nobu.app:run"
 
 [tool.pytest.ini_options]
 pythonpath = '.'
@@ -40,11 +40,11 @@ quote-style = 'single'
 [tool.taskipy.tasks]
 format = 'ruff check . --fix && ruff format .'
 pre_test = 'task format'
-test = 'pytest -s -x --cov=parabellum -vv'
+test = 'pytest -s -x --cov=nobu -vv'
 post_test = 'coverage html'
-pre_docker_run = 'docker build -t parabellum:latest .'
-docker_run = 'docker run -it --rm parabellum:latest'
-post_docker_run = 'docker rmi parabellum:latest'
+pre_docker_run = 'docker build -t nobu:latest .'
+docker_run = 'docker run -it --rm nobu:latest'
+post_docker_run = 'docker rmi nobu:latest'
 
 [build-system]
 requires = ["poetry-core"]

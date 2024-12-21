@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from parabellum.commons import DictUtils
+from nobu.commons import DictUtils
 
 from .notion_database import NotionDatabase
 from .notion_page import NotionPage

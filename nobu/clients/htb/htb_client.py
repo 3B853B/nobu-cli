@@ -4,7 +4,7 @@ from typing import Any
 
 from requests_cache import CachedResponse, CachedSession, OriginalResponse
 
-from parabellum.commons import BearerAuth
+from nobu.commons import BearerAuth
 
 
 class HtbClient:
@@ -22,7 +22,7 @@ class HtbClient:
         self.token: str = token
         self.base_url: str = 'https://labs.hackthebox.com/api/v4'
         self.base_headers: dict[str, str] = {
-            'User-Agent': 'Parabellum',
+            'User-Agent': 'Nobu',
             'Accept': 'application/json',
         }
         self.session: CachedSession = CachedSession(

@@ -17,7 +17,7 @@ COPY README.md ./
 RUN poetry install --without dev --no-root \
     && rm -rf $POETRY_CACHE_DIR
 
-COPY parabellum ./parabellum
+COPY nobu ./nobu
 COPY notion-templates ./notion-templates
 COPY .env ./
 
@@ -26,4 +26,4 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 RUN poetry install --without dev
 
-CMD ["parabellum"]
+CMD ["nobu"]

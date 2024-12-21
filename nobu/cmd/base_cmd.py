@@ -3,7 +3,7 @@ import os
 import sys
 from typing import Any, Callable
 
-from parabellum.commons import Printer
+from nobu.commons import Printer
 
 
 class BaseCmd(cmd.Cmd):

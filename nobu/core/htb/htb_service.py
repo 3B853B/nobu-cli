@@ -1,8 +1,8 @@
 import logging
 from typing import Any
 
-from parabellum.clients.htb import HtbClient
-from parabellum.settings import Settings
+from nobu.clients.htb import HtbClient
+from nobu.settings import Settings
 
 from .htb_machine import HtbMachine
 from .htb_parser import HtbParser

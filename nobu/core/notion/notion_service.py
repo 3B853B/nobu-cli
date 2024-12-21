@@ -3,15 +3,15 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from parabellum.clients.notion import NotionClient
-from parabellum.clients.notion.filters import (
+from nobu.clients.notion import NotionClient
+from nobu.clients.notion.filters import (
     FilterProperty,
     FilterValue,
     QueryFilter,
 )
-from parabellum.core.htb import HtbMachine
-from parabellum.core.notion import NotionDatabase, NotionPage
-from parabellum.settings import Settings
+from nobu.core.htb import HtbMachine
+from nobu.core.notion import NotionDatabase, NotionPage
+from nobu.settings import Settings
 
 from .notion_parser import NotionParser
 

@@ -1,13 +1,13 @@
 from rich.table import Table
 
-from parabellum.commons import Printer
-from parabellum.core.htb import HtbMachine, HtbService
-from parabellum.core.notion import NotionDatabase, NotionPage
+from nobu.commons import Printer
+from nobu.core.htb import HtbMachine, HtbService
+from nobu.core.notion import NotionDatabase, NotionPage
 
-from . import ParabellumCmd
+from . import NobuCmd
 
 
-class HtbCmd(ParabellumCmd):
+class HtbCmd(NobuCmd):
     """
     Handle all HTB commands.
     """
@@ -24,7 +24,7 @@ class HtbCmd(ParabellumCmd):
             args: list[str] = line.split(' ')
 
             context: NotionDatabase | NotionPage | None = (
-                ParabellumCmd.notion_context
+                NobuCmd.notion_context
             )
             if not context or not isinstance(context, NotionDatabase):
                 Printer.err('no Notion database in use, please select one:')
@@ -54,7 +54,7 @@ class HtbCmd(ParabellumCmd):
                 Printer.err('machine not found')
                 return False
 
-            ParabellumCmd.notion.add_htb_machine(machine, context.identifier)
+            NobuCmd.notion.add_htb_machine(machine, context.identifier)
             Printer.suc(
                 f'machine {machine.name} added to {context.title} database'
             )
