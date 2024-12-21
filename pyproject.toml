@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "nobu-cli"
-version = "1.0.0"
+version = "1.0.1"
 description = ""
 authors = ["Guilherme Marim <3b853b@pm.me>"]
 readme = "README.md"
+packages = [{ include = "nobu" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
