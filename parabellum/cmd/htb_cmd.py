@@ -1,63 +1,66 @@
-import textwrap
-
-from rich.console import Console
 from rich.table import Table
 
 from parabellum.commons import Printer
 from parabellum.core.htb import HtbMachine, HtbService
+from parabellum.core.notion import NotionDatabase, NotionPage
 
-from .base_cmd import BaseCmd
+from . import ParabellumCmd
 
 
-class HtbCmd(BaseCmd):
+class HtbCmd(ParabellumCmd):
     """
     Handle all HTB commands.
     """
 
-    def __init__(self, base_prompt: str) -> None:
+    def __init__(self) -> None:
         """
         Initializes HtbCmd object.
         """
-        self.console: Console = Console()
-        self.latest_prompt: str = base_prompt
-        self.default_prompt: str = f'{base_prompt.split(" ")[0]}(htb)'
-        self.prompt: str = f'{self.default_prompt} > '
-        self.context: HtbMachine | None = None
-        self.service: HtbService = HtbService()
-        super().__init__()
+        super().__init__('htb')
+        self.machines: list[HtbMachine] | None = None
 
-    def _print_machines(self, machines: list[HtbMachine]) -> None:
-        table: Table = Table()
-        columns: list[str] = [
-            'ID',
-            'Machine',
-            'Difficulty',
-            'OS',
-            'Rating',
-            'User Owns',
-            'System Owns',
-        ]
+    def do_add(self, line: str | None = None) -> bool:
+        try:
+            args: list[str] = line.split(' ')
 
-        for index, column in enumerate(columns):
-            if index == 1:
-                table.add_column(column, header_style='b', justify='left')
-            elif index == len(columns):
-                table.add_column(column, header_style='b', justify='right')
+            context: NotionDatabase | NotionPage | None = (
+                ParabellumCmd.notion_context
+            )
+            if not context or not isinstance(context, NotionDatabase):
+                Printer.err('no Notion database in use, please select one:')
+                super().do_dbs()
+                return False
+
+            identifier: str = args[-1]
+            if identifier.isdigit():
+                identifier: int = int(identifier)
             else:
-                table.add_column(column, header_style='b', justify='center')
+                Printer.err('invalid machine identifier')
+                return False
 
-        for machine in machines:
-            table.add_row(
-                str(machine.id),
-                machine.name,
-                machine.difficulty_text,
-                machine.os,
-                str(machine.stars),
-                str(machine.user_owns_count),
-                str(machine.root_owns_count),
+            if not self.machines:
+                service: HtbService = HtbService()
+                self.machines = service.list_machines(
+                    size=50, update=True, retired=False
+                )
+
+            machine: HtbMachine | None = None
+            for item in self.machines:
+                if identifier == item.id:
+                    machine = item
+                    break
+
+            if not machine:
+                Printer.err('machine not found')
+                return False
+
+            ParabellumCmd.notion.add_htb_machine(machine, context.identifier)
+            Printer.suc(
+                f'machine {machine.name} added to {context.title} database'
             )
 
-        self.console.print(table)
+        except Exception as ex:
+            Printer.err(str(ex))
 
     def do_machines(self, line: str | None = None) -> None:
         try:
@@ -67,13 +70,60 @@ class HtbCmd(BaseCmd):
             size: int = int(args[args.index('-s') + 1]) if '-s' in args else 5
 
             service: HtbService = HtbService()
-            machines: list[HtbMachine] = service.list_machines(
+            self.machines: list[HtbMachine] = service.list_machines(
                 size=size, update=update, retired=retired
             )
-            self._print_machines(machines)
+
+            table: Table = Table()
+            columns: list[str] = [
+                'ID',
+                'Machine',
+                'Difficulty',
+                'OS',
+                'Rating',
+                'User Owns',
+                'System Owns',
+            ]
+
+            for index, column in enumerate(columns):
+                if index == 1:
+                    table.add_column(column, header_style='b', justify='left')
+                elif index == len(columns):
+                    table.add_column(column, header_style='b', justify='right')
+                else:
+                    table.add_column(
+                        column, header_style='b', justify='center'
+                    )
+
+            for machine in self.machines:
+                table.add_row(
+                    str(machine.id),
+                    machine.name,
+                    machine.difficulty_text,
+                    machine.os,
+                    str(machine.stars),
+                    str(machine.user_owns_count),
+                    str(machine.root_owns_count),
+                )
+
+            Printer.table(table)
 
         except Exception as ex:
             Printer.err(str(ex))
+
+    def help_add(self) -> None:
+        """
+        Prints help menu for the add command.
+        """
+        help_text: str = """
+        [bold cyan]Usage:[/bold cyan] add [OPTIONS] [ID]
+
+        Add machine to Notion database.
+
+        [bold cyan]Options:[/bold cyan]
+            -a          Add all active machines.
+        """
+        Printer.help(help_text)
 
     def help_machines(self) -> None:
         """
@@ -90,4 +140,4 @@ class HtbCmd(BaseCmd):
             -s  int     Max size of machines to be printed. Default is 5.
             -u          Force update results rather than getting from cache.
         """
-        self.console.print(textwrap.dedent(help_text), highlight=False)
+        Printer.help(help_text)

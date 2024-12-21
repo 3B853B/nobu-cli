@@ -65,6 +65,48 @@ class NotionClient:
             self.logger.exception(str(ex), exc_info=True)
             raise
 
+    def create_page(
+        self,
+        parent: dict[str, Any],
+        properties: dict[str, Any],
+        children: dict[str, Any] | None = None,
+        icon: dict[str, Any] | None = None,
+        cover: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        try:
+            resource_url: str = f'{self.base_url}/pages'
+
+            headers: dict[str, str] = self.base_headers
+            headers['Content-Type']: str = 'application/json'
+
+            body: dict[str, Any] = {
+                'parent': parent,
+                'properties': properties,
+                'children': children,
+                'icon': icon,
+                'cover': cover,
+            }
+
+            body: dict[str, Any] = {
+                key: value for key, value in body.items() if value is not None
+            }
+
+            response: requests.Response = requests.post(
+                url=resource_url,
+                headers=headers,
+                json=body,
+                timeout=self.timeout,
+                auth=BearerAuth(self.token),
+            )
+
+            response.raise_for_status()
+
+            return response.json()
+
+        except Exception as ex:
+            self.logger.exception(str(ex), exc_info=True)
+            raise
+
     def search_by_title(
         self,
         query: str,

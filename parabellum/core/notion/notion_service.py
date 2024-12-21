@@ -9,6 +9,7 @@ from parabellum.clients.notion.filters import (
     FilterValue,
     QueryFilter,
 )
+from parabellum.core.htb import HtbMachine
 from parabellum.core.notion import NotionDatabase, NotionPage
 from parabellum.settings import Settings
 
@@ -28,6 +29,46 @@ class NotionService:
             raise ValueError('could not find Notion token')
 
         self.client: NotionClient = NotionClient(token=self.token)
+
+    def add_htb_machine(self, machine: HtbMachine, db_id: str) -> None:
+        try:
+            template: Path = Path('notion-templates/pages/htb_machine.json')
+
+            if not template.exists():
+                raise ValueError('htb_machine.json template not found')
+
+            with open(template, 'r', encoding='utf-8') as file:
+                dict_template: dict[str, Any] = json.load(file)
+
+            parent: dict[str, Any] = dict_template['parent']
+            parent['database_id']: str = db_id
+
+            properties: dict[str, Any] = dict_template['properties']
+            properties['Name']['title'][0]['text'][
+                'content'
+            ]: str = machine.name
+            properties['Difficulty']['select'][
+                'name'
+            ]: str = machine.difficulty_text
+            properties['OS']['select']['name']: str = machine.os
+            machine_url: str = (
+                f'https://app.hackthebox.com/machines/{machine.name}'
+            )
+            properties['URL']['url']: str = machine_url
+            release_date: str = machine.release.strftime('%Y-%m-%d')
+            properties['Release Date']['date']['start']: str = release_date
+
+            icon: dict[str, Any] = dict_template['icon']
+            avatar_url: str = f'https://labs.hackthebox.com{machine.avatar}'
+            icon['external']['url']: str = avatar_url
+
+            self.client.create_page(
+                parent=parent, properties=properties, icon=icon
+            )
+
+        except Exception as ex:
+            self.logger.exception(str(ex), exc_info=True)
+            raise
 
     def create_db(self, template: Path, parent_id: str | None = None) -> None:
         try:

@@ -1,10 +1,7 @@
 import cmd
 import os
 import sys
-import textwrap
 from typing import Any, Callable
-
-from rich.console import Console
 
 from parabellum.commons import Printer
 
@@ -18,12 +15,19 @@ class BaseCmd(cmd.Cmd):
         """
         Initializes BaseCmd object.
         """
-        self.console: Console = Console()
         super().__init__()
 
-    def _get_arg_value(
-        self, args: list[str], arg: str, convert_to: Callable = str
+    def get_arg_value(
+        self, args: list[str], arg: str, convert_to: Callable
     ) -> Any | None:
+        """
+        Gets the value from an argument and converts it to the
+        specified callable type.
+
+        :param args: List of arguments.
+        :param arg: Argument to be searched.
+        :param convert_to: Callable to be used as a converter.
+        """
         return convert_to(args[args.index(arg) + 1]) if arg in args else None
 
     def default(self, line: str) -> None:
@@ -34,12 +38,6 @@ class BaseCmd(cmd.Cmd):
         """
         Printer.err(f'unknown command: {line}')
 
-    def emptyline(self) -> None:
-        """
-        Handles when an empty line is inputted.
-        """
-        pass
-
     def do_clear(self, line: str | None = None) -> None:
         os.system('cls') if os.name == 'nt' else os.system('clear')
 
@@ -48,6 +46,12 @@ class BaseCmd(cmd.Cmd):
 
     def do_quit(self, line: str | None = None) -> None:
         self.do_exit()
+
+    def emptyline(self) -> None:
+        """
+        Handles when an empty line is inputted.
+        """
+        pass
 
     def help_clear(self) -> None:
         """
@@ -58,7 +62,7 @@ class BaseCmd(cmd.Cmd):
 
         Clears the application console.
         """
-        self.console.print(textwrap.dedent(help_text), highlight=False)
+        Printer.help(help_text)
 
     def help_exit(self) -> None:
         """
@@ -69,7 +73,7 @@ class BaseCmd(cmd.Cmd):
 
         Exits the application.
         """
-        self.console.print(textwrap.dedent(help_text), highlight=False)
+        Printer.help(help_text)
 
     def help_quit(self) -> None:
         """
@@ -80,4 +84,4 @@ class BaseCmd(cmd.Cmd):
 
         Exits the application.
         """
-        self.console.print(textwrap.dedent(help_text), highlight=False)
+        Printer.help(help_text)

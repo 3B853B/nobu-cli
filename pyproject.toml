@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parabellum"
-version = "0.7.2"
+version = "0.8.0"
 description = ""
 authors = ["Guilherme Marim <3b853b@pm.me>"]
 readme = "README.md"
@@ -31,7 +31,7 @@ line-length = 79
 [tool.ruff.lint]
 preview = true
 select = ['I', 'F', 'E', 'W', 'PL', 'PT']
-ignore = ['PLR6301']
+ignore = ['PLC0415', 'PLR6301']
 
 [tool.ruff.format]
 preview = true

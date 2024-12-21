@@ -1,0 +1,53 @@
+{
+  "parent": {
+    "database_id": "DATABASE-ID"
+  },
+  "icon": {
+    "external": {
+      "url": "AVATAR-URL"
+    }
+  },
+  "properties": {
+    "Status": {
+      "select": {
+        "name": "Not Started"
+      }
+    },
+    "Name": {
+      "title": [
+        {
+          "text": {
+            "content": "MACHINE-NAME"
+          }
+        }
+      ]
+    },
+    "Difficulty": {
+      "select": {
+        "name": "DIFFICULTY"
+      }
+    },
+    "OS": {
+      "select": {
+        "name": "OS"
+      }
+    },
+    "URL": {
+      "url": "MACHINE-URL"
+    },
+    "Release Date": {
+      "date": {
+        "start": "RELEASE-DATE"
+      }
+    },
+    "Pwn Ranking": {
+      "number": 0
+    },
+    "Pwn Achievement": {
+      "url": " "
+    },
+    "Tags": {
+      "multi_select": []
+    }
+  }
+}

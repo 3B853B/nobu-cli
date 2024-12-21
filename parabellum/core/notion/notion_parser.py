@@ -1,6 +1,8 @@
 import logging
 from typing import Any
 
+from parabellum.commons import DictUtils
+
 from .notion_database import NotionDatabase
 from .notion_page import NotionPage
 
@@ -24,7 +26,14 @@ class NotionParser:
     def to_notion_page(cls, data: dict[str, Any]) -> NotionPage:
         try:
             identifier: str = data['id']
-            title: str = data['properties']['title']['title'][0]['plain_text']
+            titles: list[dict[str, Any]] | dict[str, Any] = DictUtils.get_key(
+                data, 'title'
+            )
+
+            if isinstance(titles, list):
+                title: str = titles[0]['plain_text']
+            else:
+                title: str = titles['title'][0]['plain_text']
 
             return NotionPage(identifier=identifier, title=title)
 
