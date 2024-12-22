@@ -91,6 +91,14 @@ class NobuCmd(BaseCmd):
         except Exception as ex:
             Printer.err(str(ex))
 
+    def do_intigriti(self, line: str | None = None) -> None:
+        try:
+            from .intigriti_cmd import IntigritiCmd
+
+            IntigritiCmd().cmdloop()
+        except Exception as ex:
+            Printer.err(str(ex))
+
     def do_pages(self, line: str | None = None) -> None:
         try:
             pages: list[NotionPage] = self.notion.list_pages()
@@ -170,6 +178,17 @@ class NobuCmd(BaseCmd):
         [bold cyan]Usage:[/bold cyan] htb
 
         Starts the Hack the Box module and its commands.
+        """
+        Printer.help(help_text)
+
+    def help_intigriti(self) -> None:
+        """
+        Prints help menu for the intigriti command.
+        """
+        help_text = """
+        [bold cyan]Usage:[/bold cyan] intigriti
+
+        Starts the Intigriti module and its commands.
         """
         Printer.help(help_text)
 

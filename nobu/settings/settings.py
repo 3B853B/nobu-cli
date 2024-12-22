@@ -7,5 +7,6 @@ class Settings(BaseSettings):
     )
 
     htb_token: str | None = None
+    intigriti_token: str | None = None
     notion_root_page_id: str | None = None
     notion_token: str | None = None
