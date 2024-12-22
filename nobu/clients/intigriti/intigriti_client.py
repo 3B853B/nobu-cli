@@ -30,9 +30,9 @@ class IntigritiClient:
         following: bool | None = None,
         limit: int = 50,
         status_id: int | None = None,
-        offset: int | None = None,
+        offset: int | None = 0,
         type_id: int | None = None,
-    ) -> dict[str, Any]:
+    ) -> list[dict[str, Any]]:
         """
         Lists all Intigriti programs for your user.
 
@@ -45,10 +45,19 @@ class IntigritiClient:
 
         :return: A list of programs.
 
+        :raise ValueError: When limit value is lesser or equals 0.
         :raise Exception: When an unexpected error occurs.
         """
+
         try:
+            if limit <= 0:
+                raise ValueError('limit value cannot be lesser or equals 0.')
+
             resource_url: str = f'{self.base_url}/programs'
+
+            max_size: int = 500
+            limit: int = max_size if limit > max_size else limit
+
             params: dict[str, Any] = {
                 'following': following,
                 'limit': limit,
@@ -63,16 +72,24 @@ class IntigritiClient:
                 if value is not None
             }
 
-            response: requests.Response = requests.get(
-                url=resource_url,
-                headers=self.headers,
-                params=params,
-                timeout=self.timeout,
-            )
+            records: list[dict[str, Any]] = []
+            while len(records) < limit:
+                response: requests.Response = requests.get(
+                    url=resource_url,
+                    headers=self.headers,
+                    params=params,
+                    timeout=self.timeout,
+                )
 
-            response.raise_for_status()
+                response.raise_for_status()
 
-            return response.json()
+                dict_response = response.json()
+                records.extend(dict_response['records'])
+                params['offset'] += limit
+                if len(records) == dict_response['maxCount']:
+                    break
+
+            return records
 
         except Exception as ex:
             self.logger.exception(str(ex), exc_info=True)

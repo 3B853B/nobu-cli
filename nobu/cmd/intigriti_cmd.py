@@ -21,27 +21,27 @@ class IntigritiCmd(NobuCmd):
 
     def do_info(self, line: str | None = None) -> bool:
         try:
-            args: list[str] = line.split(' ')
-
-            identifier: str = args[-1]
-            if not identifier:
-                Printer.err('invalid program identifier')
-                return False
-
             if not self.programs:
                 service: IntigritiService = IntigritiService()
                 self.programs = service.list_programs()
 
-            program: IntigritiProgram | None = None
-            for item in self.programs:
-                if identifier == item.id:
-                    service: IntigritiService = IntigritiService()
-                    program = service.get_program(item.id)
-                    break
+            args: list[str] = line.split(' ')
+            identifier: str = args[-1]
+            if identifier.isdigit():
+                identifier: int = int(identifier) - 1
+                id_greater_than_max_size = identifier >= len(self.programs)
+                id_less_than_min_size = identifier < 0
 
-            if not program:
-                Printer.err('program not found')
+                if id_greater_than_max_size or id_less_than_min_size:
+                    Printer.err('invalid program ID')
+                    return False
+            else:
+                Printer.err('invalid program ID')
                 return False
+
+            program_id: str = self.programs[identifier].id
+            service: IntigritiService = IntigritiService()
+            program: IntigritiProgram = service.get_program(program_id)
 
             table = Table()
 
@@ -77,11 +77,11 @@ class IntigritiCmd(NobuCmd):
         try:
             args: list[str] = line.split(' ')
             following: bool = '-f' in args
-            limit: int = self.get_option_value(args, '-l', int)
-            match_status: int = self.get_option_value(args, '-ms', int)
-            match_type: int = self.get_option_value(args, '-mt', int)
-            offset: int = self.get_option_value(args, '-of', int)
-            search: str = self.get_option_value(args, '-s', str)
+            limit: int | None = self.get_option_value(args, '-l', int)
+            match_status: int | None = self.get_option_value(args, '-ms', int)
+            match_type: int | None = self.get_option_value(args, '-mt', int)
+            offset: int | None = self.get_option_value(args, '-of', int)
+            search: str | None = self.get_option_value(args, '-s', str)
 
             service: IntigritiService = IntigritiService()
             self.programs = service.list_programs(
@@ -111,9 +111,9 @@ class IntigritiCmd(NobuCmd):
                         column, header_style='b', justify='center'
                     )
 
-            for program in self.programs:
+            for index, program in enumerate(self.programs):
                 table.add_row(
-                    program.id,
+                    str(index + 1),
                     program.name,
                     program.status,
                     program.confidentiality_level,

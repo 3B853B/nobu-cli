@@ -54,23 +54,16 @@ class IntigritiService:
         :raise Exception: When an unexpected error occurs.
         """
         try:
-            records: list[dict[str, Any]] = []
             limit: int = 50 if not limit else limit
             offset: int = 0 if not offset else offset
 
-            while True:
-                response: dict[str, Any] = self.client.get_all_programs(
-                    following=following,
-                    limit=limit,
-                    offset=offset,
-                    status_id=match_status,
-                    type_id=match_type,
-                )
-                offset += limit
-                records.extend(response['records'])
-
-                if offset >= response['maxCount']:
-                    break
+            records: list[dict[str, Any]] = self.client.get_all_programs(
+                following=following,
+                limit=limit,
+                offset=offset,
+                status_id=match_status,
+                type_id=match_type,
+            )
 
             programs: list[IntigritiProgramSlim] = [
                 IntigritiParser.to_program_slim(record) for record in records

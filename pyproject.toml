@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nobu-cli"
-version = "1.2.0"
+version = "1.2.1"
 description = ""
 authors = ["Guilherme Marim <3b853b@pm.me>"]
 readme = "README.md"
