@@ -75,8 +75,23 @@ class IntigritiCmd(NobuCmd):
 
     def do_programs(self, line: str | None = None) -> None:
         try:
+            args: list[str] = line.split(' ')
+            following: bool = '-f' in args
+            limit: int = self.get_option_value(args, '-l', int)
+            match_status: int = self.get_option_value(args, '-ms', int)
+            match_type: int = self.get_option_value(args, '-mt', int)
+            offset: int = self.get_option_value(args, '-of', int)
+            search: str = self.get_option_value(args, '-s', str)
+
             service: IntigritiService = IntigritiService()
-            self.programs = service.list_programs()
+            self.programs = service.list_programs(
+                following=following,
+                limit=limit,
+                match_status=match_status,
+                match_type=match_type,
+                offset=offset,
+                search=search,
+            )
 
             table: Table = Table()
             columns: list[str] = [
@@ -124,8 +139,26 @@ class IntigritiCmd(NobuCmd):
         Prints help menu for the programs command.
         """
         help_text = """
-        [bold cyan]Usage:[/bold cyan] programs
+        [bold cyan]Usage:[/bold cyan] programs [OPTIONS]
 
         List all Intigriti available programs for your user.
+
+        [bold cyan]Options:[/bold cyan]
+            -f              Return only programs that you're following.
+
+            -l  int         Limit of programs to be returned.
+
+            -ms int         Return programs with specified status ID.
+                            [bold green]3[/bold green] [dim]Open[/dim]
+                            [bold green]4[/bold green] [dim]Suspended[/dim]
+                            [bold green]5[/bold green] [dim]Closing[/dim]
+
+            -mt int         Return programs with specified type ID.
+                            [bold green]1[/bold green] [dim]Bug bounty[/dim]
+                            [bold green]2[/bold green] [dim]Hybrid[/dim]
+
+            -of int         Get programs starting by the specified offset.
+
+            -s  string      Filter by specified name.
         """
         Printer.help(help_text)

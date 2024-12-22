@@ -17,18 +17,27 @@ class BaseCmd(cmd.Cmd):
         """
         super().__init__()
 
-    def get_arg_value(
-        self, args: list[str], arg: str, convert_to: Callable
+    def get_option_value(
+        self, args: list[str], option: str, convert_to: Callable
     ) -> Any | None:
         """
-        Gets the value from an argument and converts it to the
+        Gets the value from an option and converts it to the
         specified callable type.
 
         :param args: List of arguments.
-        :param arg: Argument to be searched.
+        :param option: Option to be searched.
         :param convert_to: Callable to be used as a converter.
         """
-        return convert_to(args[args.index(arg) + 1]) if arg in args else None
+        if option in args:
+            start_index: int = args.index(option) + 1
+            values: list[Any] = []
+            for i in range(start_index, len(args)):
+                if args[i].startswith('-'):
+                    break
+                values.append(args[i])
+            return convert_to(' '.join(values))
+
+        return None
 
     def default(self, line: str) -> None:
         """

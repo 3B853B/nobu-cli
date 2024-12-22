@@ -30,33 +30,69 @@ class IntigritiService:
 
         self.client = IntigritiClient(token=self.token)
 
-    def list_programs(self) -> list[IntigritiProgramSlim]:
+    def list_programs(
+        self,
+        following: bool | None = None,
+        limit: int | None = None,
+        match_status: int | None = None,
+        match_type: int | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+    ) -> list[IntigritiProgramSlim]:
         """
         Lists all Intigriti programs for your user.
+
+        :param following: Return only programs that you're following.
+        :param limit: Limit of programs to be returned.
+        :param match_status: Return programs with specified status ID.
+        :param match_type: Return programs with specified type ID.
+        :param offset: Get programs starting by the specified offset.
+        :param search: Filter by specified name.
 
         :return: A list of programs.
 
         :raise Exception: When an unexpected error occurs.
         """
-        limit: int = 50
-        offset: int = 0
-        records: list[dict[str, Any]] = []
+        try:
+            records: list[dict[str, Any]] = []
+            limit: int = 50 if not limit else limit
+            offset: int = 0 if not offset else offset
 
-        while True:
-            response: dict[str, Any] = self.client.get_all_programs(
-                limit=limit, offset=offset
-            )
-            offset += limit
-            records.extend(response['records'])
+            while True:
+                response: dict[str, Any] = self.client.get_all_programs(
+                    following=following,
+                    limit=limit,
+                    offset=offset,
+                    status_id=match_status,
+                    type_id=match_type,
+                )
+                offset += limit
+                records.extend(response['records'])
 
-            if offset >= response['maxCount']:
-                break
+                if offset >= response['maxCount']:
+                    break
 
-        programs: list[IntigritiProgramSlim] = [
-            IntigritiParser.to_program_slim(record) for record in records
-        ]
+            programs: list[IntigritiProgramSlim] = [
+                IntigritiParser.to_program_slim(record) for record in records
+            ]
 
-        return programs
+            programs.sort()
+
+            filtered_programs: list[IntigritiProgramSlim] = []
+
+            if search:
+                [
+                    filtered_programs.append(program)
+                    for program in programs
+                    if search.lower() in program.name.lower()
+                ]
+                return filtered_programs
+
+            return programs
+
+        except Exception as ex:
+            self.logger.exception(str(ex), exc_info=True)
+            raise
 
     def get_program(self, program_id: str) -> IntigritiProgram:
         """

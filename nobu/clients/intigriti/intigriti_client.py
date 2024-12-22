@@ -27,21 +27,21 @@ class IntigritiClient:
 
     def get_all_programs(
         self,
-        status_id: int | None = None,
-        type_id: int | None = None,
         following: bool | None = None,
         limit: int = 50,
+        status_id: int | None = None,
         offset: int | None = None,
+        type_id: int | None = None,
     ) -> dict[str, Any]:
         """
         Lists all Intigriti programs for your user.
 
-        :param status_id: Current status of the program.
-        :param type_id: Type of program.
         :param following: Indicates whether you are following the
          program.
-        :param limit: Limit of programs to be returned
-        :param offset: Return offset.
+        :param limit: Limit of programs to be returned.
+        :param offset: Get programs starting by the specified offset.
+        :param status_id: Current status of the program.
+        :param type_id: Type of program.
 
         :return: A list of programs.
 
@@ -50,11 +50,17 @@ class IntigritiClient:
         try:
             resource_url: str = f'{self.base_url}/programs'
             params: dict[str, Any] = {
-                'statusId': status_id,
-                'typeId': type_id,
                 'following': following,
                 'limit': limit,
                 'offset': offset,
+                'statusId': status_id,
+                'typeId': type_id,
+            }
+
+            params: dict[str, Any] = {
+                key: value
+                for key, value in params.items()
+                if value is not None
             }
 
             response: requests.Response = requests.get(

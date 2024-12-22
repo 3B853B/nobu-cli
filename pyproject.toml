@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nobu-cli"
-version = "1.1.1"
+version = "1.2.0"
 description = ""
 authors = ["Guilherme Marim <3b853b@pm.me>"]
 readme = "README.md"
@@ -32,7 +32,7 @@ line-length = 79
 [tool.ruff.lint]
 preview = true
 select = ['I', 'F', 'E', 'W', 'PL', 'PT']
-ignore = ['PLC0415', 'PLR6301']
+ignore = ['PLC0415', 'PLR0913', 'PLR0917', 'PLR6301']
 
 [tool.ruff.format]
 preview = true
