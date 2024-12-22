@@ -1,7 +1,8 @@
 from rich.table import Table
 
 from nobu.commons import Printer
-from nobu.core.htb import HtbMachine, HtbService
+from nobu.core.htb import HtbService
+from nobu.core.htb.entities import HtbMachine
 from nobu.core.notion import NotionDatabase, NotionPage
 
 from . import NobuCmd

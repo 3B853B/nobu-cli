@@ -4,12 +4,17 @@ from typing import Any
 from nobu.clients.htb import HtbClient
 from nobu.settings import Settings
 
-from .htb_machine import HtbMachine
+from .entities import HtbMachine
 from .htb_parser import HtbParser
 
 
 class HtbService:
     def __init__(self) -> None:
+        """
+        Initializes all HtbService object attributes.
+
+        :raise ValueError: When HTB token is not found.
+        """
         self.logger: logging.Logger = logging.getLogger(
             self.__class__.__name__
         )
@@ -34,8 +39,7 @@ class HtbService:
 
         :return: List of machine objects.
 
-        :raise ValueError: When size value is lesser than 0.
-        :raise ActionFailed: When an unexpected error occurs.
+        :raise Exception: When an unexpected error occurs.
         """
         try:
             response: dict[str, Any] = self.client.list_machines(

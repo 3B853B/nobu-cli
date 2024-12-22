@@ -9,7 +9,7 @@ from nobu.clients.notion.filters import (
     FilterValue,
     QueryFilter,
 )
-from nobu.core.htb import HtbMachine
+from nobu.core.htb.entities import HtbMachine
 from nobu.core.notion import NotionDatabase, NotionPage
 from nobu.settings import Settings
 

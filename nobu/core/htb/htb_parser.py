@@ -1,8 +1,7 @@
 import logging
 from typing import Any
 
-from .htb_machine import HtbMachine
-from .htb_user import HtbUser
+from .entities import HtbMachine, HtbUser
 
 
 class HtbParser:
